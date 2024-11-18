@@ -1,41 +1,45 @@
 # capa de servicio/lógica de negocio
-
 from ..persistence import repositories
 from ..utilities import translator
 from django.contrib.auth import get_user
+from ..transport import transport  # Importamos la capa de transporte que hace la consulta a la API
 
 def getAllImages(input=None):
-    # obtiene un listado de datos "crudos" desde la API, usando a transport.py.
-    json_collection = []
+    # Si se pasa un parámetro 'input', lo usamos para realizar una búsqueda en la API,
+    # de lo contrario, obtenemos todas las imágenes disponibles.
+    raw_images = transport.getAllImages(input)
 
-    # recorre cada dato crudo de la colección anterior, lo convierte en una Card y lo agrega a images.
+    # Ahora transformamos los datos crudos de la API en objetos Card
     images = []
+    for img in raw_images:
+        card = translator.fromRequestIntoCard(img)
+        images.append(card)
 
     return images
 
-# añadir favoritos (usado desde el template 'home.html')
 def saveFavourite(request):
-    fav = '' # transformamos un request del template en una Card.
-    fav.user = '' # le asignamos el usuario correspondiente.
+    # Transforma un objeto de request en una Card y lo guarda en la base de datos
+    fav = translator.fromTemplateIntoCard(request)
+    fav.user = get_user(request)  # Asocia al usuario logueado
+    return repositories.saveFavourite(fav)
 
-    return repositories.saveFavourite(fav) # lo guardamos en la base.
-
-# usados desde el template 'favourites.html'
 def getAllFavourites(request):
+    # Obtiene todos los favoritos de un usuario, si está autenticado
     if not request.user.is_authenticated:
         return []
-    else:
-        user = get_user(request)
-
-        favourite_list = [] # buscamos desde el repositories.py TODOS los favoritos del usuario (variable 'user').
-        mapped_favourites = []
-
-        for favourite in favourite_list:
-            card = '' # transformamos cada favorito en una Card, y lo almacenamos en card.
-            mapped_favourites.append(card)
-
-        return mapped_favourites
+    
+    user = get_user(request)
+    favourite_list = repositories.getAllFavourites(user)  # Asumimos que esta función existe en repositories
+    
+    # Mapeamos los favoritos desde la base de datos en objetos Card
+    mapped_favourites = []
+    for fav in favourite_list:
+        card = translator.fromRepositoryIntoCard(fav)
+        mapped_favourites.append(card)
+    
+    return mapped_favourites
 
 def deleteFavourite(request):
-    favId = request.POST.get('id')
-    return repositories.deleteFavourite(favId) # borramos un favorito por su ID.
+    # Elimina un favorito de la base de datos por su ID
+    fav_id = request.POST.get('id')
+    return repositories.deleteFavourite(fav_id)
