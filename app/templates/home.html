@@ -46,7 +46,7 @@
   {% elif img.status == 'Dead' %} 
     border: 5px solid red; 
   {% elif img.status == 'unknown' %} 
-    border: 5px solid purple; 
+    border: 5px solid violet; 
   {% endif %} 
 "> 
 <div class="row g-0"> 
@@ -63,7 +63,7 @@
 {% elif img.status == 'Dead' %} 
 🔴 {{ img.status }} 
 {% else %} 
-🟣 {{ img.status }}  <!-- Cambié el ícono a violeta -->
+🟣 {{ img.status }} 
 {% endif %} 
 </strong> 
 </p> 
