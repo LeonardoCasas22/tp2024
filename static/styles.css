@@ -148,7 +148,7 @@ table.table td i {
 
 
 .card {
-    background-color: #ffc400; /* Cambia este valor por el color que desees para el fondo de las tarjetas */
+    background-color: #cdebff; /* Cambia este valor por el color que desees para el fondo de las tarjetas */
     border: 1px solid #dcdcdc; /* Puedes cambiar el color del borde si lo deseas */
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1); /* Ajusta la sombra si es necesario */
 }
