@@ -1,4 +1,4 @@
-# capa de vista/presentación
+from django.core.paginator import Paginator
 from django.shortcuts import redirect, render
 from .layers.services import services
 from django.contrib.auth.decorators import login_required
@@ -7,49 +7,55 @@ from django.contrib.auth import logout
 def index_page(request):
     return render(request, 'index.html')
 
-# esta función obtiene 2 listados que corresponden a las imágenes de la API y los favoritos del usuario,
-# y los usa para dibujar el correspondiente template.
-# si el opcional de favoritos no está desarrollado, devuelve un listado vacío.
 def home(request):
     images = services.getAllImages()
     favourite_list = services.getAllFavourites(request)
+    
+    # Paginación con 12 imágenes por página
+    paginator = Paginator(images, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
     return render(request, 'home.html', {
-        'images': images,
+        'page_obj': page_obj,
         'favourite_list': favourite_list
     })
 
 def search(request):
-    search_msg = request.POST.get('query', '')
+    search_msg = request.POST.get('query', '') or request.GET.get('query', '')
     
-    # si el texto ingresado no es vacío, trae las imágenes y favoritos desde services.py,
-    # y luego renderiza el template (similar a home).
-    if search_msg != '':
+    if search_msg:
         images = services.getAllImages(search_msg)
+        print(f"Número total de resultados: {len(images)}")  # Imprime el número total de resultados
         favourite_list = services.getAllFavourites(request)
+        
+        paginator = Paginator(images, 12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
         return render(request, 'home.html', {
-            'images': images,
-            'favourite_list': favourite_list
+            'page_obj': page_obj,
+            'favourite_list': favourite_list,
+            'query': search_msg
         })
     else:
         return redirect('home')
-        
-# Estas funciones se usan cuando el usuario está logueado en la aplicación.
+
 @login_required
 def getAllFavouritesByUser(request):
-    favourite_list = []  # Aquí deberías obtener los favoritos del usuario
+    favourite_list = []
     return render(request, 'favourites.html', {
         'favourite_list': favourite_list
     })
 
 @login_required
 def saveFavourite(request):
-    pass  # Aquí deberías implementar la lógica para guardar un favorito
+    pass
 
 @login_required
 def deleteFavourite(request):
-    pass  # Aquí deberías implementar la lógica para eliminar un favorito
+    pass
 
 @login_required
 def exit(request):
-    logout(request)  # Cierra la sesión del usuario
-    return redirect('index')  # Redirige a la página de inicio 
+    pass
