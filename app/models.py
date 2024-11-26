@@ -14,3 +14,6 @@ class Favourite(models.Model):
 
     class Meta:
         unique_together = (('user', 'url', 'name', 'status', 'last_location', 'first_seen'),)
+        
+        
+        

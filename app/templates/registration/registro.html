@@ -1,24 +1,52 @@
 {% extends 'header.html' %} 
 
+{% load crispy_forms_tags         %}
+
+
 {% block content %}
 
+<body>
+    
+    <div class="col-12 col-md-6 offset-md-3" style="background-color: black;"> 
+        <div class="card">
+            <div class="body"  >
+                
+                <h1>Registrate</h1>
 
+                {% if form.errors  %}
 
+                    <p>Por favor revisa este campo  </p>
+ 
+                {% endif %}
+                
+                <div>
+                    <form action="" method="POST">{% csrf_token    %}
 
-<h3>Registro de usuario</h3>
+                
+                        <div >   
+                
+                            <table style="background-color: black;">     
 
-<form action=""    class=""     method="post">
-   
-    {%  csrf_token        %}
-   
-    {{ form  }}
+                                {{form|crispy}} 
+                                <button class= "btn btn-primary btn-block " type="submit" href="{% url 'login' %}">Enviar</button>
+                                <a class="link btn btn-primary btn-block" href="{% url 'home' %}">Volver</a>
+                                &nbsp; &nbsp; &nbsp;
+                            </table>
+                        &nbsp; &nbsp; &nbsp;
+                        </div>
+                         &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;
+                         
 
-    <div>
-        <a class="link btn btn-primary btn-block" href="{% url 'home' %}">Volver</a>
-        <button class= "btn btn-sm btn-primary " type="submit">Enviar</button>
+        
+                        
+                    </form>
+    
+
+                </div>
+            </div>
+        </div>
     </div>
-</form>
-
+</body>
 
 
 {% endblock %}

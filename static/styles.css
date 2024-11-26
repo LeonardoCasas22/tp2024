@@ -6,6 +6,19 @@ body {
     color: #566787;
     background-color: #ffffff;
     font-family: 'Roboto', sans-serif;
+    margin: 0; 
+    padding: 0; 
+    height: 100%;
+
+
+}
+
+h1 h2 p {
+    color: #e7e9ec;
+    font-family: "Lacquer";
+    font-weight: 800;
+    font-style: normal;
+
 }
 
 .table-responsive {

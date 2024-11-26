@@ -5,9 +5,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .forms import CustomUserCreationForm
 from django.contrib.auth import authenticate, login
+from app.models import Favourite
+
 
 def index_page(request):
     return render(request, 'index.html')
+
+def exitoso(request):
+    return render(request, 'registration/exitoso.html')
 
 def home(request):
     images = services.getAllImages()
@@ -45,14 +50,15 @@ def search(request):
 
 @login_required
 def getAllFavouritesByUser(request):
-    favourite_list = []
+    favourite_list = [Favourite]
     return render(request, 'favourites.html', {
         'favourite_list': favourite_list
     })
 
 @login_required
-def saveFavourite(request):
-    pass
+def saveFavourite(request): 
+    return redirect('home')
+
 
 @login_required
 def deleteFavourite(request):
@@ -77,9 +83,9 @@ def register(request):
             
             
             user = authenticate(username=user_creation_form.cleaned_data['username'], password= user_creation_form.cleaned_data['password1'])
-            login(request,user)
             
-            return redirect('home') 
+            
+            return redirect('exitoso') 
      
         
     
